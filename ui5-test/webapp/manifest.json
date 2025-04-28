@@ -1,0 +1,114 @@
+{
+	"_version": "1.9.0",
+	"sap.app": {
+		"id": "ui5.test",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"applicationVersion": {
+			"version": "1.0.0"
+		},
+		"dataSources": {
+			"mainService": {
+				"uri": "/sap/opu/odata/sap/ZPROJECT_TEST_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/metadata.xml"
+				}
+			}
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "sap-icon://detail-view",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": ["sap_hcb", "sap_belize", "sap_belize_plus"]
+	},
+	"sap.ui5": {
+		"rootView": {
+			"viewName": "ui5.test.view.App",
+			"type": "XML",
+			"async": true,
+			"id": "app"
+		},
+		"dependencies": {
+			"minUI5Version": "1.52.0",
+			"libs": {
+				"sap.ui.core": {},
+				"sap.m": {},
+				"sap.ui.layout": {}
+			}
+		},
+
+		"config": {
+			"sapFiori2Adaptation": {
+				"style": true,
+				"collapse": true,
+				"title": true,
+				"back": true,
+				"hierarchy": true
+			}
+		},
+
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "ui5.test.i18n.i18n"
+				}
+			},
+			"": {
+				"dataSource": "mainService",
+				"settings": {
+					"metadataUrlParams": {
+						"sap-documentation": "heading"
+					},
+					"defaultBindingMode": "TwoWay",
+					"json": true
+				}
+			}
+		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"viewPath": "ui5.test.view",
+				"controlId": "app",
+				"controlAggregation": "pages",
+				"async": "true"
+			},
+			"routes": [
+				{
+					"pattern": "",
+					"name": "home",
+					"target": ["home"]
+				}
+			],
+			"targets": {
+				"home": {
+					"viewName": "Home",
+					"viewId": "home",
+					"viewLevel": 1,
+					"title": "{i18n>title}"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,27 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Dependencies
+node_modules/
+bower_components/
+
+# Build
+dist/
+.tmp/
+tmp/
+temp/
+
+# UI5 specific
+resources/
+test-resources/
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log* 
