@@ -1,77 +1,84 @@
 <mvc:View controllerName="ui5.test.controller.Home" displayBlock="true"
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:f="sap.ui.layout.form">
-	<Page id="page" title="{i18n>title}">
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout">
+	<Page id="page" title="Calculatrice" showHeader="true" class="sapUiContentPadding">
+		<headerContent>
+			<Button icon="sap-icon://refresh" press="loadOperations" tooltip="Rafraîchir"/>
+		</headerContent>
 		<content>
-			<f:SimpleForm
-				id="operationForm"
-				editable="true"
-				layout="ResponsiveGridLayout"
-				title="Nouvelle Opération"
-				labelSpanXL="4"
-				labelSpanL="4"
-				labelSpanM="4"
-				labelSpanS="12"
-				adjustLabelSpan="false"
-				emptySpanXL="0"
-				emptySpanL="0"
-				emptySpanM="0"
-				emptySpanS="0"
-				columnsXL="1"
-				columnsL="1"
-				columnsM="1"
-				singleContainerFullSize="false">
-				<f:content>
-					<Label text="Premier Opérande" />
-					<Input id="operand1" value="{/newOperation/Operand1}" type="Number" />
-					
-					<Label text="Opération" />
-					<Select id="operation" selectedKey="{/newOperation/Operation}">
-						<items>
-							<core:Item text="+" key="+" xmlns:core="sap.ui.core" />
-							<core:Item text="-" key="-" xmlns:core="sap.ui.core" />
-							<core:Item text="*" key="*" xmlns:core="sap.ui.core" />
-							<core:Item text="/" key="/" xmlns:core="sap.ui.core" />
-						</items>
-					</Select>
-					
-					<Label text="Second Opérande" />
-					<Input id="operand2" value="{/newOperation/Operand2}" type="Number" />
-				</f:content>
-			</f:SimpleForm>
-			
-			<Button 
-				text="Calculer"
-				type="Emphasized"
-				press="onSubmitOperation"
-				class="sapUiSmallMarginBottom" />
+			<Panel class="sapUiMediumMargin" headerText="Nouvelle Opération" expandable="false">
+				<f:SimpleForm
+					id="operationForm"
+					editable="true"
+					layout="ResponsiveGridLayout"
+					labelSpanXL="4"
+					labelSpanL="4"
+					labelSpanM="4"
+					labelSpanS="12"
+					adjustLabelSpan="false"
+					columnsXL="1"
+					columnsL="1"
+					columnsM="1"
+					singleContainerFullSize="false">
+					<f:content>
+						<Label text="Premier Opérande" required="true"/>
+						<Input id="operand1" value="{/newOperation/Operand1}" type="Number" placeholder="Entrez le premier nombre"/>
+						
+						<Label text="Opération" required="true"/>
+						<Select id="operation" selectedKey="{/newOperation/Operation}" class="sapUiSmallMarginBottom">
+							<items>
+								<core:Item text="Addition" key="+"/>
+								<core:Item text="Soustraction" key="-"/>
+								<core:Item text="Multiplication" key="*"/>
+								<core:Item text="Division" key="/"/>
+							</items>
+						</Select>
+						
+						<Label text="Second Opérande" required="true"/>
+						<Input id="operand2" value="{/newOperation/Operand2}" type="Number" placeholder="Entrez le second nombre"/>
+					</f:content>
+				</f:SimpleForm>
+				<Button 
+					text="Calculer"
+					type="Emphasized"
+					press="onSubmitOperation"
+					icon="sap-icon://equal"
+					class="sapUiSmallMarginBegin"/>
+			</Panel>
 
-			<List 
-				items="{
-					path: '/ZZSHISTORYSet',
-					model: 'mainModel'
-				}" 
-				noDataText="No data" 
-				mode="Delete"
-				delete="onDeleteOperation"
-				growing="true" 
-				growingScrollToLoad="true">
-				<items>
-					<ObjectListItem
-						title="{mainModel>Operand1} {mainModel>Operation} {mainModel>Operand2} = {mainModel>Zzresult}"
-						type="Active">
-					</ObjectListItem>
-				</items>
-			</List>
+			<Panel headerText="Historique des Opérations" class="sapUiMediumMargin">
+				<List 
+					items="{
+						path: '/ZZSHISTORYSet',
+						model: 'mainModel'
+					}" 
+					noDataText="Aucune opération dans l'historique" 
+					mode="Delete"
+					delete="onDeleteOperation"
+					growing="true" 
+					growingScrollToLoad="true">
+					<items>
+						<DisplayListItem
+							label="{mainModel>Operand1} {mainModel>Operation} {mainModel>Operand2} = {mainModel>Zzresult}"
+							value="{
+								path: 'mainModel>Id',
+								formatter: '.formatDate'
+							}"/>
+					</items>
+				</List>
+			</Panel>
 		</content>
 
 		<footer>
 			<OverflowToolbar>
-				<Button id="messageManager" icon="sap-icon://alert" text="{=${messages>/}.length}" visible="true" type="{= ${messages>/}.length > 0 ? sap.m.ButtonType.Reject : sap.m.ButtonType.Default }" press="openMessages"/>
+				<Button id="messageManager" icon="sap-icon://alert" text="{=${messages>/}.length}" visible="true" 
+					type="{= ${messages>/}.length > 0 ? 'Reject' : 'Default' }" press="openMessages"/>
 				<ToolbarSpacer/>
+				<Text text="Calculatrice SAPUI5"/>
 			</OverflowToolbar>
 		</footer>
-
 	</Page>
 </mvc:View>

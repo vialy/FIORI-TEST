@@ -62,28 +62,20 @@ sap.ui.define(
 			this.loadOperations();
 		};
 
-		HomeController.prototype.onDeleteOperation = function(oEvent) {
-			const oItem = oEvent.getParameter("listItem");
-			const sPath = oItem.getBindingContext("mainModel").getPath();
-			const oModel = this.getView().getModel("mainModel");
+		HomeController.prototype.formatDate = function(dateString) {
+			if (!dateString) return "";
 			
-			MessageBox.confirm("Êtes-vous sûr de vouloir supprimer cette opération ?", {
-				title: "Confirmation",
-				onClose: function(oAction) {
-					if (oAction === MessageBox.Action.OK) {
-						oModel.remove(sPath, {
-							success: function() {
-								MessageToast.show("Opération supprimée avec succès");
-								this.loadOperations(); // Recharger la liste
-							}.bind(this),
-							error: function(oError) {
-								MessageToast.show("Erreur lors de la suppression");
-								console.error("Delete failed:", oError);
-							}
-						});
-					}
-				}.bind(this)
-			});
+			try {
+				const date = new Date(dateString);
+				const day = String(date.getDate()).padStart(2, '0');
+				const month = String(date.getMonth() + 1).padStart(2, '0');
+				const year = date.getFullYear();
+				
+				return `${day}/${month}/${year}`;
+			} catch (e) {
+				console.warn("Erreur de formatage de date:", e);
+				return "";
+			}
 		};
 
 		HomeController.prototype.loadOperations = function() {
@@ -93,17 +85,17 @@ sap.ui.define(
 					console.log("=== Données chargées ===");
 					console.log("Nombre total d'opérations:", oData.results.length);
 					
-					oData.results.forEach((operation, index) => {
+					oData.results.forEach(function(operation, index) {
 						console.log(`\nOpération #${index + 1}:`);
 						console.log("Premier opérande:", operation.Operand1);
 						console.log("Opération:", operation.Operation);
 						console.log("Second opérande:", operation.Operand2);
 						console.log("Résultat:", operation.Zzresult);
-						console.log("Date de création:", new Date(operation.__metadata.created).toLocaleString());
-					});
+						console.log("Date:", this.formatDate(operation.Id));
+					}.bind(this));
 					
 					console.log("\n=== Fin des données ===");
-				},
+				}.bind(this),
 				error: function(oError) {
 					console.error("Error loading data:", oError);
 					MessageToast.show("Erreur lors du chargement des données");
@@ -188,6 +180,30 @@ sap.ui.define(
 			} catch (error) {
 				MessageToast.show(error.message);
 			}
+		};
+
+		HomeController.prototype.onDeleteOperation = function(oEvent) {
+			const oItem = oEvent.getParameter("listItem");
+			const sPath = oItem.getBindingContext("mainModel").getPath();
+			const oModel = this.getView().getModel("mainModel");
+			
+			MessageBox.confirm("Êtes-vous sûr de vouloir supprimer cette opération ?", {
+				title: "Confirmation",
+				onClose: function(oAction) {
+					if (oAction === MessageBox.Action.OK) {
+						oModel.remove(sPath, {
+							success: function() {
+								MessageToast.show("Opération supprimée avec succès");
+								this.loadOperations();
+							}.bind(this),
+							error: function(oError) {
+								MessageToast.show("Erreur lors de la suppression");
+								console.error("Delete failed:", oError);
+							}
+						});
+					}
+				}.bind(this)
+			});
 		};
 
 		return HomeController;
